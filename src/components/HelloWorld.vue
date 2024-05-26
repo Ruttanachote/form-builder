@@ -1,12 +1,13 @@
 <template>
-  <Vueform
-    v-bind="vueform"
-    :modelValue="formData"
-    @update:modelValue="updateFormData"
-  />
-
+  <div v-if="vueform.schema">
+    <Vueform
+      v-bind="vueform"
+      :modelValue="formData"
+      @update:modelValue="updateFormData"
+    />
+  </div>
   <pre>{{ formData }}</pre>
-
+  <pre>{{ vueform }}</pre>
 </template>
 
 <script>
@@ -14,76 +15,34 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 export default {
-
   setup() {
     const vueform = ref({});
     const formData = ref({});
 
     const fetchFormData = async () => {
       try {
-        const schemaResponse = await axios.get("API_URL_FOR_SCHEMA");
-        const dataResponse = await axios.get("API_URL_FOR_DATA");
-
-        vueform.value = {
+        const schema = {
           size: "lg",
           addClass: "vf-my-form",
-          // schema: schemaResponse.data
           schema: {
             container: {
               type: "group",
               schema: {
-                container4: {
-                  type: "group",
-                  schema: {
-                    column1: {
-                      type: "group",
-                      columns: {
-                        container: 3,
-                      },
-                      schema: {
-                        text: {
-                          type: "text",
-                          label: "Text",
-                        },
-                      },
-                    },
-                    column2: {
-                      type: "group",
-                      columns: {
-                        container: 3,
-                      },
-                      schema: {
-                        text_1: {
-                          type: "text",
-                          label: "Text",
-                        },
-                      },
-                    },
-                    column3: {
-                      type: "group",
-                      columns: {
-                        container: 3,
-                      },
-                      schema: {
-                        text_2: {
-                          type: "text",
-                          label: "Text",
-                        },
-                      },
-                    },
-                    column4: {
-                      type: "group",
-                      columns: {
-                        container: 3,
-                      },
-                      schema: {
-                        text_3: {
-                          type: "text",
-                          label: "Text",
-                        },
-                      },
-                    },
-                  },
+                number: {
+                  type: "text",
+                  inputType: "number",
+                  rules: [""],
+                  autocomplete: "off",
+                  label: "Number",
+                  default: 10,
+                },
+                nui: {
+                  type: "text",
+                  inputType: "number",
+                  rules: [""],
+                  autocomplete: "off",
+                  label: "Number",
+                  default: 10,
                 },
               },
               columns: {
@@ -94,14 +53,16 @@ export default {
             },
           },
         };
-        // formData.value = dataResponse.data;
-        formData.value = {
-          text: "Hello World",
-          text_1: "Hello World",
-          text_2: "Hello World",
-          text_3: "Hello World",
-        };
-      
+
+        const inputlist = ["nui", "number"];
+        
+        const dataResponse = { nui_default:50, nui_rules: ["nullable", "min:10", "max:100", "numeric"] ,  number_default: 900, number_inputType: "text", number_rules: ["nullable", "min:10", "max:100", "numeric"]};
+        // const dataResponse = { nui_rules: ["nullable", "min:10", "max:100", "numeric"] ,  number_rules: ["nullable", "min:10", "max:100", "numeric"]};
+
+        updateSchemaWithData(schema, dataResponse);
+
+
+        vueform.value = schema;
       } catch (error) {
         console.error("Error fetching form schema or data:", error);
       }
@@ -112,6 +73,29 @@ export default {
     const updateFormData = (newData) => {
       formData.value = newData;
     };
+
+    function updateSchemaWithData(obj, data) {
+      for (const key in data) {
+        const schemaKey = key.split("_")[0]; // Extract the schema key from dataResponse key
+        const schemaProp = key.split("_")[1]; // Extract the schema property from dataResponse key
+        updateNestedSchema(
+          obj.schema.container.schema,
+          schemaKey,
+          schemaProp,
+          data[key]
+        );
+      }
+    }
+
+    function updateNestedSchema(obj, targetKey, schemaProp, newValue) {
+      for (const key in obj) {
+        if (key === targetKey) {
+          obj[key][schemaProp] = newValue;
+        } else if (typeof obj[key] === "object") {
+          updateNestedSchema(obj[key], targetKey, schemaProp, newValue);
+        }
+      }
+    }
 
     return {
       vueform,
