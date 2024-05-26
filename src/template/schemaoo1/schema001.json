@@ -1,0 +1,32 @@
+{
+  "size": "lg",
+  "addClass": "vf-my-form",
+  "schema": {
+    "container": {
+      "type": "group",
+      "schema": {
+        "number": {
+          "type": "text",
+          "inputType": "number",
+          "rules": [""],
+          "autocomplete": "off",
+          "label": "Number",
+          "default": 10
+        },
+        "nui": {
+          "type": "text",
+          "inputType": "number",
+          "rules": [""],
+          "autocomplete": "off",
+          "label": "Number",
+          "default": 10
+        }
+      },
+      "columns": {
+        "lg": {
+          "container": 12
+        }
+      }
+    }
+  }
+}

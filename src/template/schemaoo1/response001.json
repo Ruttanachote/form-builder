@@ -1,0 +1,7 @@
+{
+  "nui_default": 50,
+  "nui_rules": ["nullable", "min:10", "max:100", "numeric"],
+  "number_default": 900,
+  "number_inputType": "text",
+  "number_rules": ["nullable", "min:10", "max:100", "numeric"]
+}

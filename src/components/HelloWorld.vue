@@ -13,7 +13,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-
+import { schemas, response, inputlist } from "../template/schema";
 export default {
   setup() {
     const vueform = ref({});
@@ -21,43 +21,9 @@ export default {
 
     const fetchFormData = async () => {
       try {
-        const schema = {
-          size: "lg",
-          addClass: "vf-my-form",
-          schema: {
-            container: {
-              type: "group",
-              schema: {
-                number: {
-                  type: "text",
-                  inputType: "number",
-                  rules: [""],
-                  autocomplete: "off",
-                  label: "Number",
-                  default: 10,
-                },
-                nui: {
-                  type: "text",
-                  inputType: "number",
-                  rules: [""],
-                  autocomplete: "off",
-                  label: "Number",
-                  default: 10,
-                },
-              },
-              columns: {
-                lg: {
-                  container: 12,
-                },
-              },
-            },
-          },
-        };
-
+        const schema = schemas;        
+        const dataResponse =  response
         const inputlist = ["nui", "number"];
-        
-        const dataResponse = { nui_default:50, nui_rules: ["nullable", "min:10", "max:100", "numeric"] ,  number_default: 900, number_inputType: "text", number_rules: ["nullable", "min:10", "max:100", "numeric"]};
-        // const dataResponse = { nui_rules: ["nullable", "min:10", "max:100", "numeric"] ,  number_rules: ["nullable", "min:10", "max:100", "numeric"]};
 
         updateSchemaWithData(schema, dataResponse);
 
@@ -105,3 +71,4 @@ export default {
   },
 };
 </script>
+../template/schema001../template/schema

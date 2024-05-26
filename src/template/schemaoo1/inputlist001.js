@@ -1,0 +1,1 @@
+export const inputlist001 = ["nui", "number"];
